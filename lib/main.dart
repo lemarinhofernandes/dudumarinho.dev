@@ -120,7 +120,22 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
             ),
             const SizedBox(height: 10),
-            const Text("🙀 omg literally me ☝️☝️")
+            Row(
+              children: [
+                Image.asset(
+                  "assets/backhand.gif",
+                  height: 20,
+                  width: 20,
+                ),
+                Image.asset(
+                  "assets/backhand.gif",
+                  height: 20,
+                  width: 20,
+                ),
+                SizedBox(width: 5),
+                const Text("omg literally me")
+              ],
+            )
           ],
         ),
         SizedBox(
