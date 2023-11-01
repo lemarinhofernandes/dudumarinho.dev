@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:mypage/mainProvider.dart';
+import 'package:mypage/models/socialNetworkModel.dart';
+import 'package:mypage/providers/mainProvider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 void main() {
@@ -56,30 +57,32 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: AnimatedContainer(
           duration: Duration(milliseconds: 500),
-          height: toggleLabel ? 500 : 800,
-          width: toggleLabel ? 700 : 400,
+          height: 600,
+          width: 700,
           decoration: _myBoxDecoration(),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                toggleLabel
-                    ? Column(
-                        children: [
-                          titulo(),
-                          const SizedBox(height: 28),
-                          pfpAndBio(),
-                          const SizedBox(height: 28),
-                          mySocialNetworkings(),
-                        ],
-                      )
-                    : Center(
-                        child: Text("nada por aqui :/"),
-                      ),
+                Column(
+                  children: [
+                    titulo(),
+                    const SizedBox(height: 28),
+                    pfpAndBio(),
+                    const SizedBox(height: 28),
+                    mySocialNetworkings(),
+                  ],
+                ),
                 //TextButton(onPressed: setToggle, child: Text("teste")),
                 FloatingActionButton.extended(
+                    foregroundColor: Colors.black87,
+                    backgroundColor: Colors.white70,
                     onPressed: setToggle,
+                    icon: toggleLabel
+                        ? Icon(Icons.arrow_forward_ios)
+                        : Icon(Icons.arrow_back_ios_new),
+                    extendedIconLabelSpacing: 10,
                     label:
                         toggleLabel == true ? Text("portifolio") : Text("Bio"))
               ],
@@ -120,18 +123,16 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text("🙀 omg literally me ☝️☝️")
           ],
         ),
-        const SizedBox(
+        SizedBox(
           width: 400,
-          height: 240,
+          height: 340,
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text("Bio"),
-            Text(
-                "Desenvolvedor mobile com 2 anos de experiência. Principais conhecimentos em Swift, Dart/Flutter, Java, C, MySQL, algoritmos e padrões. Apaixonado e curioso por tecnologia."),
+            Text(MainProvider.bios[0].title),
+            Text(MainProvider.bios[0].body),
             SizedBox(height: 20),
-            Text("Mobile bio"),
-            Text(
-                "Desenvolvedor mobile com 2 anos de experiência. Principais conhecimentos em Swift, Dart/Flutter, Java, C, MySQL, algoritmos e padrões. Apaixonado e curioso por tecnologia."),
+            Text(MainProvider.bios[1].title),
+            Text(MainProvider.bios[1].body),
           ]),
         )
       ],
@@ -148,21 +149,33 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget mySocialNetworkings() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: _myLinks(),
     );
   }
 
   List<Widget> _myLinks() {
     List<Widget> links = [];
-    MainProvider.myLinks().socialNetwork.forEach((element) {
+    for (var element in MainProvider.myLinks.socialNetwork) {
       links.add(InkWell(
-        child: SvgPicture.asset(element.svg, height: 40, color: Colors.black87),
+        child: _link(element: element),
         onTap: () => launch(element.link),
       ));
-      if (MainProvider.myLinks().socialNetwork.last != element) {
-        links.add(const SizedBox(width: 10));
+      if (MainProvider.myLinks.socialNetwork.last != element) {
+        links.add(const SizedBox(width: 15));
       }
-    });
+    }
     return links;
+  }
+
+  Widget _link({required SocialNetwork element}) {
+    Color defaultColor = Colors.black87;
+    if (element.svg == null) {
+      return Text(
+        element.placeHolder!,
+        style: TextStyle(fontSize: 16, color: defaultColor),
+      );
+    }
+    return SvgPicture.asset(element.svg!, height: 40, color: Colors.black87);
   }
 }

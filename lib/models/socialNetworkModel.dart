@@ -8,10 +8,8 @@ class SocialNetworkModel {
 
 class SocialNetwork {
   final String link;
-  final String svg;
+  final String? svg;
+  final String? placeHolder;
 
-  SocialNetwork({
-    required this.link,
-    required this.svg,
-  });
+  SocialNetwork({required this.link, this.svg, this.placeHolder});
 }
